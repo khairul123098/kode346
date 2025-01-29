@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 350px; /* Maksimal lebar untuk mobile */
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .forgot-password {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            font-size: 14px;
+        }
+        /* Animasi loading */
+        .loader {
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-top: 8px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            display: none; /* Sembunyikan loading saat awal */
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Styling untuk pilihan melanjutkan */
+        .continue-container {
+            display: none; /* Awalnya disembunyikan */
+            margin-top: 20px;
+        }
+        .continue-btn {
+            padding: 15px;
+            background-color: #008CBA;
+            color: white;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        .continue-btn:hover {
+            background-color: #006f8c;
+        }
+        .continue-btn:focus {
+            outline: none;
+        }
+
+        /* Styling untuk pesan sapaan */
+        .greeting {
+            display: none; /* Awalnya disembunyikan */
+            font-size: 20px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-top: 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Styling untuk pilihan tampilkan konten */
+        .content-options {
+            display: none; /* Awalnya disembunyikan */
+            margin-top: 20px;
+        }
+        .content-btn {
+            padding: 15px;
+            background-color: #f39c12;
+            color: white;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .content-btn:hover {
+            background-color: #e67e22;
+        }
+        .content-btn:focus {
+            outline: none;
+        }
+
+        /* Styling tabel absen */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .content {
+            display: none; /* Konten disembunyikan awalnya */
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        /* Styling untuk form input nomor absen */
+        .absen-input-container {
+            display: none; /* Awalnya disembunyikan */
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .absen-input-container input {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        .absen-input-container button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .absen-input-container button:hover {
+            background-color: #218838;
+        }
+
+        /* Styling untuk menampilkan situs */
+        .site-message {
+            font-size: 16px;
+            color: #333;
+            font-weight: bold;
+            margin-top: 20px;
+            display: none;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* Styling untuk tombol kembali */
+        .back-btn {
+            padding: 15px;
+            background-color: #e74c3c;
+            color: white;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .back-btn:hover {
+            background-color: #c0392b;
+        }
+        .back-btn:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container" id="login-container">
+        <h2>Login</h2>
+        <form id="loginForm" onsubmit="return validateLogin()">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn">Masuk</button>
+        </form>
+        <div class="forgot-password">
+            <a href="#">Lupa Password?</a>
+        </div>
+        <div id="errorMessage" class="error-message" style="display: none;">
+            Username atau password salah!
+        </div>
+        <!-- Loader -->
+        <div id="loader" class="loader"></div>
+    </div>
+
+    <div class="continue-container" id="continue-container">
+        <div id="greeting" class="greeting">
+            Hai, Nika Ayu Sakinaa! Selamat datang!
+        </div>
+        <h2>Login Berhasil!</h2>
+        <p>Apakah Anda ingin melanjutkan?</p>
+        <button class="continue-btn" onclick="showContentOptions()">Ya, lanjutkan</button>
+        <button class="continue-btn" onclick="cancelAction()">Tidak, keluar</button>
+    </div>
+
+    <!-- Pilihan tampilkan konten -->
+    <div class="content-options" id="contentOptions">
+        <button class="content-btn" onclick="showAllContent()">Tampilkan Semuanya</button>
+        <button class="content-btn" onclick="showOneByOne()">Tampilkan Satu-Satu</button>
+    </div>
+
+    <!-- Konten input untuk menampilkan satu per satu -->
+    <div class="absen-input-container" id="absenInputContainer">
+        <h3>Masukkan Nomor Absen Siswa:</h3>
+        <input type="number" id="absenNumber" placeholder="Nomor Absen" min="1" max="36">
+        <button onclick="showStudentByNumber()">Tampilkan Nama</button>
+    </div>
+
+    <div class="content" id="singleContent">
+        <h3>Nama Siswa:</h3>
+        <p id="studentName"></p>
+    </div>
+
+    <div class="content" id="allContent">
+        <h3>Daftar Absen Siswa Kelas 8-5:</h3>
+        <table>
+            <tr><th>No</th><th>Nama Siswa</th><th>Hadir</th></tr>
+            <tr><td>1</td><td>Anna</td><td><button id="btn-1" onclick="togglePresence(1)">Hadir</button></td></tr>
+            <tr><td>2</td><td>Brian</td><td><button id="btn-2" onclick="togglePresence(2)">Hadir</button></td></tr>
+            <tr><td>3</td><td>Celia</td><td><button id="btn-3" onclick="togglePresence(3)">Hadir</button></td></tr>
+            <!-- Anda bisa menambahkan lebih banyak data siswa sesuai kebutuhan -->
+        </table>
+    </div>
+
+    <!-- Menampilkan pesan situs -->
+    <div id="siteMessage" class="site-message"></div>
+
+    <script>
+        // Array daftar situs yang berbeda
+        const sites = [
+            `situs=100
+daftar situs=https://Videyu.short.gy/x0Cdgx
+https://Videyu.short.gy/yKU4OV
+https://Videyu.short.gy/6NQgW
+https://Videyu.short.gy/V6tqna`,
+
+            `situs=101
+daftar situs=https://Videyu.short.gy/GrP2eB
+https://Videyu.short.gy/vLFSl6
+https://Videyu.short.gy/d2MmdY
+https://Videyu.short.gy/TRxIxy`,
+
+            `situs=102
+daftar situs=https://Videyu.short.gy/jJTiLg
+https://Videyu.short.gy/SVkCFM
+https://Videyu.short.gy/F7e1fF
+https://Videyu.short.gy/cdRnOA`,
+
+            `situs=103
+daftar situs=https://Videyu.short.gy/IeP6Gk
+https://Videyu.short.gy/Rfv7v5
+https://Videyu.short.gy/rxqhhw
+https://Videyu.short.gy/UQ978O`
+        ];
+
+        let siteIndex = 0; // Menandakan indeks situs yang ditampilkan
+
+        // Fungsi untuk validasi login
+        function validateLogin() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+
+            // Menampilkan animasi loader selama 10 detik
+            document.getElementById("loader").style.display = "block";
+            
+            // Menunda validasi selama 10 detik untuk mensimulasikan proses loading
+            setTimeout(function() {
+                if (username === "NIKA666" && password === "28012025") {
+                    document.getElementById("login-container").style.display = "none"; // Sembunyikan form login
+                    document.getElementById("loader").style.display = "none"; // Sembunyikan loader
+                    document.getElementById("continue-container").style.display = "block"; // Tampilkan pilihan melanjutkan
+                    document.getElementById("greeting").style.display = "block"; // Tampilkan sapaan
+                } else {
+                    document.getElementById("errorMessage").style.display = "block"; // tampilkan pesan error
+                    document.getElementById("loader").style.display = "none"; // Sembunyikan loader
+                }
+            }, 10000); // Delay selama 10 detik
+
+            return false; // Mencegah form submit langsung
+        }
+
+        function showContentOptions() {
+            // Sembunyikan pilihan sebelumnya
+            document.getElementById("continue-container").style.display = "none";
+            // Tampilkan pilihan konten
+            document.getElementById("contentOptions").style.display = "block";
+        }
+
+        function showAllContent() {
+            // Menyembunyikan pilihan konten dan menampilkan semua konten
+            document.getElementById("contentOptions").style.display = "none";
+            document.getElementById("allContent").style.display = "block"; // Tampilkan tabel absen
+        }
+
+        function showOneByOne() {
+            // Menyembunyikan pilihan konten dan menampilkan form input nomor absen
+            document.getElementById("contentOptions").style.display = "none";
+            document.getElementById("absenInputContainer").style.display = "block";
+        }
+
+        function showStudentByNumber() {
+            var absenNumber = document.getElementById("absenNumber").value;
+
+            if (absenNumber >= 1 && absenNumber <= 36) {
+                document.getElementById("studentName").innerText = students[absenNumber - 1];
+                document.getElementById("singleContent").style.display = "block";
+            } else {
+                alert("Nomor absen tidak valid!");
+            }
+        }
+
+        function togglePresence(absenNumber) {
+            var btn = document.getElementById("btn-" + absenNumber);
+            
+            // Disable tombol saat menunggu
+            btn.disabled = true;
+            btn.innerText = "Menunggu";
+            btn.style.backgroundColor = "#f39c12";
+            
+            // Menunggu 30 detik, kemudian tampilkan pesan situs dan sembunyikan tabel
+            setTimeout(function() {
+                // Menampilkan pesan yang diminta
+                document.getElementById("siteMessage").innerText = sites[siteIndex];
+                document.getElementById("siteMessage").style.display = "block"; // Menampilkan pesan
+                document.getElementById("allContent").style.display = "none"; // Sembunyikan tabel absen
+
+                // Perbarui indeks untuk menunjukkan situs berikutnya di klik berikutnya
+                siteIndex = (siteIndex + 1) % sites.length; // Mengulang dari awal setelah situs terakhir
+            }, 30000); // Delay 30 detik
+
+            // Enable tombol kembali setelah 30 detik
+            setTimeout(function() {
+                btn.disabled = false;
+                btn.innerText = "Hadir"; // Kembali ke teks semula
+                btn.style.backgroundColor = "#4CAF50"; // Warna hijau lagi
+            }, 30000); // Enable tombol setelah 30 detik
+        }
+
+        function cancelAction() {
+            alert("Anda memilih untuk keluar!");
+            // Logika untuk keluar atau redirect bisa ditambahkan di sini
+        }
+
+        function backToAttendance() {
+            // Menyembunyikan pesan situs dan menampilkan tabel absen lagi
+            document.getElementById("siteMessage").style.display = "none";
+            document.getElementById("allContent").style.display = "block";
+        }
+    </script>
+
+</body>
+</html>
